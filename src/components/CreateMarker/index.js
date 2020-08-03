@@ -4,7 +4,10 @@ import TextField from "@material-ui/core/TextField";
 import { Typography, Button } from "@material-ui/core";
 
 function CreateMarker({ addNewLocation }) {
-  const [location, setLocation] = useState({ latitude: "", longitude: "" });
+  const [location, setLocation] = useState({
+    latitude: "",
+    longitude: "",
+  });
 
   const handleChangeLatitude = (event) => {
     setLocation({

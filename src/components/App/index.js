@@ -4,30 +4,45 @@ import Grid from "@material-ui/core/Grid";
 import "./app.css";
 import CreateMarker from "../CreateMarker";
 
+const markerTemplate = {
+  location: [],
+  option: { color: "red" },
+};
+
 function App() {
   const [polygon, setPolygon] = useState({
-    location: [
-      [13.0827, 80.2707],
-      [14.0827, 82.2707],
-      [15.0827, 81.2707],
-      [13.0827, 80.2707],
-    ],
+    location: [],
     option: { strokeColor: "blue", strokeThickness: 3 },
   });
+  const [pins, setPins] = useState([]);
 
-  const handleAddLocation = (location) => {
+  const handleAddLocation = (newLocation) => {
+    const { latitude, longitude } = newLocation;
+    const loc = [+latitude, +longitude];
     if (polygon.location.length > 0) {
-      const currentLocation = [...polygon.location];
-      console.log(polygon);
+      const polygonLocations = [...polygon.location];
+      polygonLocations.splice(polygonLocations.length - 1, 0, loc);
       setPolygon({
         ...polygon,
-        location: currentLocation.splice(currentLocation.length - 2, 0, [
-          location.latitude,
-          location.longitude,
-        ]),
+        location: polygonLocations,
       });
-      console.log(polygon);
+    } else {
+      const newLocations = [];
+      newLocations.push(loc);
+      newLocations.push(loc);
+      setPolygon({
+        ...polygon,
+        location: newLocations,
+      });
     }
+
+    setPins([
+      ...pins,
+      {
+        ...markerTemplate,
+        location: loc,
+      },
+    ]);
   };
 
   return (
@@ -39,6 +54,7 @@ function App() {
         <ReactBingmaps
           bingmapKey="ArkIuxZ53TqeTinwyLDb2274xuZ7kBYqhue_LmHn9BDQ09uqTRbIMkUZo92Ba8rm"
           polyline={polygon}
+          pushPins={pins}
           center={[13.0827, 80.2707]}
           id="map"
         ></ReactBingmaps>
